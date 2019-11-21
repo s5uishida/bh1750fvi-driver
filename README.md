@@ -14,7 +14,7 @@ for gpio communication in java and have confirmed that it works in Raspberry Pi 
   - GND
   - SDA
   - SCL
-  - ADD --> I2C address is **0x23** when connected to GND or left open, and **0x5c** when connected to Vin.
+  - AD0 --> I2C address is **0x23** when connected to GND or left open, and **0x5c** when connected to Vin.
 - [GPIO of Raspberry Pi 3B](https://www.raspberrypi.org/documentation/usage/gpio/README.md)
   - Vin --> (1) or (17) / 3.3V
   - GND --> (6), (9), (14), (20), (25), (30), (34) or (39)
