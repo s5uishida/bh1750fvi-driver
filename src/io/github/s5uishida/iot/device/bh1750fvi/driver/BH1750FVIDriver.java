@@ -43,13 +43,14 @@ public class BH1750FVIDriver {
 
 	private final AtomicInteger useCount = new AtomicInteger(0);
 
-	private static final ConcurrentHashMap<Integer, BH1750FVIDriver> map = new ConcurrentHashMap<Integer, BH1750FVIDriver>();
+	private static final ConcurrentHashMap<String, BH1750FVIDriver> map = new ConcurrentHashMap<String, BH1750FVIDriver>();
 
 	synchronized public static BH1750FVIDriver getInstance(int i2cBusNumber, byte i2cAddress) {
-		BH1750FVIDriver bh1750fvi = map.get(i2cBusNumber);
+		String key = i2cBusNumber + ":" + String.format("%x", i2cAddress);
+		BH1750FVIDriver bh1750fvi = map.get(key);
 		if (bh1750fvi == null) {
 			bh1750fvi = new BH1750FVIDriver(i2cBusNumber, i2cAddress);
-			map.put(i2cBusNumber, bh1750fvi);
+			map.put(key, bh1750fvi);
 		}
 		return bh1750fvi;
 	}
