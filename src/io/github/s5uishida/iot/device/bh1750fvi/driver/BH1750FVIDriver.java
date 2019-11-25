@@ -33,6 +33,10 @@ public class BH1750FVIDriver {
 	private static final byte OPECODE_ONE_TIME_H_RESOLUTION_MODE2		= 0x21;
 	private static final byte OPECODE_ONE_TIME_L_RESOLUTION_MODE			= 0x23;
 
+	private static final int H_RESOLUTION_MODE_MEASUREMENT_TIME_MILLIS	= 120;
+	private static final int H_RESOLUTION_MODE2_MEASUREMENT_TIME_MILLIS	= 120;
+	private static final int L_RESOLUTION_MODE_MEASUREMENT_TIME_MILLIS	= 16;
+
 	private static final int SENSOR_DATA_LENGTH = 2;
 
 	private final byte i2cAddress;
@@ -82,7 +86,6 @@ public class BH1750FVIDriver {
 		try {
 			LOG.debug(logPrefix + "before - useCount:{}", useCount.get());
 			if (useCount.compareAndSet(0, 1)) {
-				init();
 				LOG.info(logPrefix + "opened");
 			}
 		} finally {
@@ -160,11 +163,14 @@ public class BH1750FVIDriver {
 		}
 	}
 
-	private void init() throws IOException {
-		write(OPECODE_CONTINUOUSLY_H_RESOLUTION_MODE);
-	}
-
 	public float getOptical() throws IOException {
+		write(OPECODE_ONE_TIME_H_RESOLUTION_MODE);
+
+		try {
+			Thread.sleep(H_RESOLUTION_MODE_MEASUREMENT_TIME_MILLIS);
+		} catch (InterruptedException e) {
+		}
+
 		byte[] data = read(SENSOR_DATA_LENGTH);
 
 		return (float)((((int)(data[0] & 0xff) << 8) + (int)(data[1] & 0xff)) / 1.2);
